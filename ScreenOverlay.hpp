@@ -1,6 +1,8 @@
 #ifndef _SCREEN_OVERLAY_H_
 #define _SCREEN_OVERLAY_H_
 
+#include <string>
+
 #include <X11/Xlib.h>
 
 #include <cairo.h>
@@ -12,6 +14,7 @@ public:
 	~ScreenOverlay();
 
 	void drawBox(unsigned x, unsigned y, unsigned w, unsigned h);
+	void drawText(const std::string &text, unsigned x, unsigned y);
 
 private:
 	Window overlay;

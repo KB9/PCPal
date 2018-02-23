@@ -39,6 +39,17 @@ void ScreenOverlay::drawBox(unsigned x, unsigned y, unsigned w, unsigned h)
 	cairo_stroke(context);
 }
 
+void ScreenOverlay::drawText(const std::string &text, unsigned x, unsigned y)
+{
+	cairo_set_source_rgb(context, 1.0, 1.0, 1.0);
+	cairo_select_font_face(context, "Arial",
+	                       CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+	cairo_set_font_size(context, 16);
+
+	cairo_move_to(context, x, y);
+	cairo_show_text(context, text.c_str());
+}
+
 Window ScreenOverlay::getOverlayWindow(Display *display, Window &root_window)
 {
 	return XCompositeGetOverlayWindow(display, root_window);

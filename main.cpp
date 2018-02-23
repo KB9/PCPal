@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
 	while (is_running)
 	{
 		auto pos = mousePos(display);
-		screen_overlay.drawBox(pos.first-10, pos.second-10, 20, 20);
+		screen_overlay.drawText("(" + std::to_string(pos.first) + "," + std::to_string(pos.second) + ")", pos.first+5, pos.second-5);
 		nanosleep(&ts, NULL);
 	}
 
