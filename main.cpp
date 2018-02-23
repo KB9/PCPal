@@ -111,18 +111,19 @@ std::pair<int, int> mousePos(Display *display)
 
 int main(int argc, char *argv[])
 {
+	struct timespec ts = {0, 5000000};
+
 	Display *display = XOpenDisplay(NULL);
 
 	ScreenOverlay screen_overlay(display);
 
-	cv::imshow("PCPal - Screen Capture", grabScreen(display));
-	char key;
-	while (key != 'q' && key != 'Q')
+	XEvent event;
+	bool is_running = true;
+	while (is_running)
 	{
 		auto pos = mousePos(display);
-
 		screen_overlay.drawBox(pos.first-10, pos.second-10, 20, 20);
-		key = cv::waitKey(30);
+		nanosleep(&ts, NULL);
 	}
 
 	XCloseDisplay(display);
