@@ -5,6 +5,7 @@
 #include <opencv2/highgui.hpp>
 
 #include "ScreenOverlay.hpp"
+#include "KeyboardSimulator.hpp"
 
 cv::Mat xImageToCvMat(const XImage *const ximage)
 {
@@ -53,6 +54,7 @@ int main(int argc, char *argv[])
 	Display *display = XOpenDisplay(NULL);
 
 	ScreenOverlay screen_overlay(display);
+	KeyboardSimulator keyboard;
 
 	XEvent event;
 	bool is_running = true;
