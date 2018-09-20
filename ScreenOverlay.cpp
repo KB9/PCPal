@@ -58,16 +58,26 @@ ScreenOverlay::ScreenOverlay(Display* display, int screen, int width, int height
 	black = createXColorFromRGBA(0, 0, 0, 255);
 }
 
+void ScreenOverlay::drawBox(int x, int y, int width, int height, bool fill)
+{
+	GC gc = XCreateGC(m_display, m_window, 0, 0);
+
+	XSetForeground(m_display, gc, black.pixel);
+	if (fill)
+	{
+		XFillRectangle(m_display, m_window, gc, x, y, width, height);
+	}
+	else
+	{
+		XDrawRectangle(m_display, m_window, gc, x, y, width, height);
+	}
+
+	XFreeGC(m_display, gc);
+}
+
 void ScreenOverlay::drawText(const std::string& text, int x, int y)
 {
-	// XClearWindow(m_display, m_window);
-
-	GC gc;
-	XGCValues gcv;
-
-	gc = XCreateGC(m_display, m_window, 0, 0);
-	XSetBackground(m_display, gc, white.pixel);
-	XSetForeground(m_display, gc, red.pixel);
+	GC gc = XCreateGC(m_display, m_window, 0, 0);
 
 	XFontStruct* font;
 	const char* font_name = "9x15bold";
@@ -80,12 +90,11 @@ void ScreenOverlay::drawText(const std::string& text, int x, int y)
 	}
 	XSetFont(m_display, gc, font->fid);
 
-	XSetForeground(m_display, gc, black.pixel);
 	int text_x = x + font->min_bounds.lbearing;
 	int text_y = y - font->max_bounds.ascent;
 	int text_width = XTextWidth(font, text.c_str(), text.size());
 	int text_height = font->max_bounds.ascent + font->max_bounds.descent;
-	XFillRectangle(m_display, m_window, gc, text_x, text_y, text_width, text_height);
+	drawBox(text_x, text_y, text_width, text_height, true);
 
 	XSetForeground(m_display, gc, red.pixel);
 	XDrawString(m_display, m_window, gc, x, y, text.c_str(), text.size());

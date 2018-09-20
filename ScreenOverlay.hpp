@@ -10,6 +10,7 @@ class ScreenOverlay
 public:
 	ScreenOverlay(Display* display, int screen, int width, int height);
 
+	void drawBox(int x, int y, int width, int height, bool fill = false);
 	void drawText(const std::string& text, int x, int y);
 
 private:
