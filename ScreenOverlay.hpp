@@ -5,24 +5,22 @@
 
 #include <X11/Xlib.h>
 
-#include <cairo.h>
-
 class ScreenOverlay
 {
 public:
-	ScreenOverlay(Display *display);
-	~ScreenOverlay();
+	ScreenOverlay(Display* display, int screen, int width, int height);
 
-	void drawBox(unsigned x, unsigned y, unsigned w, unsigned h);
-	void drawText(const std::string &text, unsigned x, unsigned y);
+	void drawText(const std::string& text, int x, int y);
 
 private:
-	Window overlay;
-	cairo_surface_t *surface = nullptr;
-	cairo_t *context = nullptr;
+	Display* m_display;
+	int m_screen;
+	Window m_window;
 
-	Window getOverlayWindow(Display *display, Window &root_window);
-	void enableInputPassthrough(Display *display, Window &overlay);
+	XColor createXColorFromRGB(short red, short green, short blue);
+	XColor createXColorFromRGBA(short red, short green, short blue, short alpha);
+
+	void allowInputPassthrough(Window w);
 };
 
 #endif // _SCREEN_OVERLAY_H_

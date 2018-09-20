@@ -1,11 +1,11 @@
-#include <iostream>
-
-#include <X11/Xlib.h>
-
-#include <opencv2/highgui.hpp>
-
 #include "ScreenOverlay.hpp"
 #include "KeyboardSimulator.hpp"
+
+#include <iostream>
+#include <unistd.h>
+
+#include <X11/Xlib.h>
+#include <opencv2/highgui.hpp>
 
 cv::Mat xImageToCvMat(const XImage *const ximage)
 {
@@ -49,20 +49,23 @@ std::pair<int, int> mousePos(Display *display)
 
 int main(int argc, char *argv[])
 {
-	struct timespec ts = {0, 5000000};
-
 	Display *display = XOpenDisplay(NULL);
+	int screen = DefaultScreen(display);
+	int width = DisplayWidth(display, screen);
+	int height = DisplayHeight(display, screen);
 
-	ScreenOverlay screen_overlay(display);
-	KeyboardSimulator keyboard;
+	ScreenOverlay overlay(display, screen, width, height);
 
 	XEvent event;
-	bool is_running = true;
-	while (is_running)
+	XExposeEvent* expose_event;
+	XConfigureEvent* config_event;
+	XKeyEvent* key_event;
+
+	while (true)
 	{
 		auto pos = mousePos(display);
-		screen_overlay.drawText("(" + std::to_string(pos.first) + "," + std::to_string(pos.second) + ")", pos.first+5, pos.second-5);
-		nanosleep(&ts, NULL);
+		overlay.drawText("(" + std::to_string(pos.first) + "," + std::to_string(pos.second) + ")", pos.first, pos.second);
+		usleep(1000);
 	}
 
 	XCloseDisplay(display);
